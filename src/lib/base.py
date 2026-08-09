@@ -1,7 +1,6 @@
 import tkinter as tk
 
-import lib.config as config
-
+from lib.settings import Settings
 from lib.editor import Editor
 from lib.statusbar import SLabel, SButton, StatusBar
 
@@ -9,11 +8,9 @@ class Base:
     def __init__(self, root, *args, **kwargs):
         self.root = root
 
-        self.config = config.Config()
-        self.config.load_data()
-        self.bindings = config.Bindings()
+        self.settings = Settings()
 
-        self.editor = Editor(self.root)
+        self.editor = Editor(self.root, master=self.root)
         self.statusbar = StatusBar(self.root)
 
         self.pack_components()
