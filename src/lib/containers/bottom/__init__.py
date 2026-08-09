@@ -5,6 +5,7 @@ from tkterminal import Terminal
 class BottomPane(tk.PanedWindow):
     def __init__(self, master, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
+        self.base = master.base
 
         self.t = Terminal(self, pady=5, padx=5, font=("Consolas", 15))
         self.t.shell = True
