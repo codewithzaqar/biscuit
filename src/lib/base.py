@@ -10,7 +10,7 @@ class Base:
 
         self.settings = Settings()
 
-        self.editor = Editor(self.root, master=self.root)
+        self.editor = Editor(base=self, master=self.root)
         self.statusbar = StatusBar(self.root)
 
         self.pack_components()
