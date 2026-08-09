@@ -7,6 +7,6 @@ class TopLeftPane(tk.PanedWindow):
         super().__init__(master, *args, **kwargs)
         self.base = master.base
 
-        self.editor = Editor(self.base)
-        self.editor.configure(height=25, width=75)
+        self.editor = Editor(self)          # ← pane as master, not self.base
+        self.editor.configure(height=25, width=25)
         self.add(self.editor)
