@@ -9,14 +9,14 @@ class ThemeLoader:
 
     def try_load_theme(self):
         try:
-            self.themedata = self.load_theme()
+            self.theme_data = self.load_theme()
         except Exception:
-            self.themedata = self.load_theme(self.default)
+            self.theme_data = self.load_theme(self.default)
 
-    def load_theme(self):
-        with open(f'src/config/themes/{self.theme_name}.json', 'r') as theme_file:
-            theme_data = json.load(theme_file)
-        return theme_data
+    def load_theme(self, name=None):
+        name = name or self.theme_name
+        with open(f'src/config/themes/{name}.json', 'r') as theme_file:
+            return json.load(theme_file)
 
     def get_loaded_theme(self):
         return self.theme_data
