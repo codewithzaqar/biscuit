@@ -1,17 +1,15 @@
 import os
 import tkinter.ttk as ttk
+import tkinter as tk
 
 
 class DirTree(ttk.Treeview):
     def __init__(self, master, startpath, *args, **kwargs):
-        kwargs.setdefault('columns', ("fullpath", "type"))
-        kwargs.setdefault('show', "tree")
         super().__init__(master, *args, **kwargs)
-        self.heading('#0', text='Directory', anchor='w')
-        self.column('#0', anchor='w', width=250)
+        self.base = master.base
 
-        self.column("fullpath", width=0, stretch=False)
-        self.column("type", width=0, stretch=False)
+        self.configure(columns=("fullpath", "type"), displaycolumns='')
+        self.heading('#0', text="Explorer", anchor=tk.W)
 
         self.create_root(startpath)
         self.bind("<<TreeviewOpen>>", self.update_tree)
@@ -47,5 +45,4 @@ class DirTree(ttk.Treeview):
             values=[dfpath, "directory"], 
             open=True
         )
-        root_node = self.get_children()[0]
-        self.fill_tree(root_node)
+        self.fill_tree(self.get_children()[0])
