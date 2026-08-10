@@ -3,9 +3,15 @@ import tkinter as tk
 
 class Text(tk.Text):
     def __init__(self, *args, **kwargs):
+
+        self.path = kwargs.pop('path', None)
         super().__init__(*args, **kwargs)
 
         self.data = None
+
+
+        if self.path:
+            self.load_file(path=self.path)
 
     def load_file(self, path):
         with open(path, 'r') as data:

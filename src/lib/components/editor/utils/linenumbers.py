@@ -1,7 +1,7 @@
 import tkinter as tk
 
 
-class TextLineNumbers(tk.Canvas):
+class LineNumbers(tk.Canvas):
     def __init__(self, *args, **kwargs):
         tk.Canvas.__init__(self, *args, **kwargs)
         self.textwidget = None
