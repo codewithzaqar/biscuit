@@ -20,7 +20,8 @@ class DirTree(ttk.Treeview):
     def openfile(self, event):
         self = event.widget
         item = self.focus()
-        if self.set(item, "type") == 'directory':
+        # Changed from: if self.set(item, "type") == 'directory'
+        if self.set(item, "type") != 'file':
             return
         path = self.set(item, "fullpath")
         self.base.set_active_file(path)
@@ -36,7 +37,13 @@ class DirTree(ttk.Treeview):
 
         for p in sorted(os.listdir(path)):
             p_path = os.path.join(path, p)
-            ptype = "directory" if os.path.isdir(p_path) else "file"
+
+            # Explicit type detection
+            ptype = None
+            if os.path.isdir(p_path):
+                ptype = 'directory'
+            elif os.path.isfile(p_path):
+                ptype = 'file' 
 
             oid = self.insert(
                 node, "end", 
