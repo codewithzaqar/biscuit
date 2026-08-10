@@ -6,6 +6,8 @@ from lib.containers import BasePane
 
 class Root(Tk):
     def __init__(self, *args, **kwargs):
+        # Extract 'dir' so it doesn't get passed to Tk()
+        self.start_dir = kwargs.pop('dir', None)
         super().__init__(*args, **kwargs)
 
         self.minsize(1290, 800)
