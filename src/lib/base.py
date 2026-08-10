@@ -14,7 +14,7 @@ class Base:
         self.active_dir = None
         self.active_file = None
 
-        self.open_files = []
+        self.opened_files = []
 
         self.binder = Binder(bindings=self.settings.bindings, base=self)
 
@@ -29,8 +29,9 @@ class Base:
         self.active_file = file
         self.trace(self.active_file)
 
-        if file not in self.open_files:
+        if file not in self.opened_files:
             self.add_to_open_files(file)
+            self.trace(f"File<{self.active_file}> was added.")
 
     def set_active_dir(self, dir):
         self.active_dir = dir
@@ -39,8 +40,11 @@ class Base:
         self.trace(self.active_dir)
 
     def add_to_open_files(self, file):
-        self.open_files.append(file)
-        self.trace(self.open_files)
+        self.opened_files.append(file)
+        self.trace(f"Opened Files {self.opened_files}")
+
+        # NEW: Trigger the tab manager to update!
+        self.root.basepane.top.right.editortabs.update_tabs()
 
     def remove_from_open_files(self, file):
         self.open_files.remove(file)
@@ -67,13 +71,11 @@ class Base:
         self.trace('open event')
         
         self.set_active_file(filedialog.askopenfilename())
-        # self.trace(f"<FileOpen>({self.active_file})")
 
     def opendir(self, event):
         self.trace('opendir event')
         
         self.set_active_dir(filedialog.askdirectory())
-        # self.trace(f"<DirOpen>({self.active_dir})")
 
     def save(self, event):
         self.trace('save event')
