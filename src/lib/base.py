@@ -1,3 +1,4 @@
+import subprocess, os, sys
 import tkinter as tk
 import tkinter.filedialog as filedialog
 
@@ -34,6 +35,10 @@ class Base:
             self.trace(f"File<{self.active_file}> was added.")
 
     def set_active_dir(self, dir):
+        # NEW: Guard against None, empty strings (from canceled dialogs), or invalid paths
+        if not os.path.isdir(dir):
+            return
+
         self.active_dir = dir
         self.refresh_dir()
         self.clean_open_files()
@@ -42,8 +47,6 @@ class Base:
     def add_to_open_files(self, file):
         self.opened_files.append(file)
         self.trace(f"Opened Files {self.opened_files}")
-
-        # NEW: Trigger the tab manager to update!
         self.root.basepane.top.right.editortabs.update_tabs()
 
     def remove_from_open_files(self, file):
@@ -56,6 +59,15 @@ class Base:
     def clean_open_files(self):
         self.open_files = []
         self.trace(self.open_files)
+
+    # NEW: Placeholder for multi-window support
+    # TODO: open file in new window
+    def open_in_new_window(self, dir):
+        # subprocess.call("")
+        print(sys.argv[0])
+
+        self.trace('open_in_new_window event')
+        pass
 
     # ----- interface -----
 
