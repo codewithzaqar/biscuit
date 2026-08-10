@@ -63,11 +63,8 @@ class Base:
     # NEW: Placeholder for multi-window support
     # TODO: open file in new window
     def open_in_new_window(self, dir):
-        # subprocess.call("")
-        print(sys.argv[0])
-
-        self.trace('open_in_new_window event')
-        pass
+        subprocess.Popen(["python", sys.argv[0], dir])
+        self.trace('open_in_new_window: {dir}')
 
     # ----- interface -----
 
