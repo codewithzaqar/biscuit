@@ -7,4 +7,4 @@ class Editor(Text):
         self.base = master.base
 
         self.configure(font=self.base.settings.font)
-        self.binder = Binder(bindings=self.base.settings.bindings, editor=self)
+        # self.binder = Binder(bindings=self.base.settings.bindings, editor=self)
