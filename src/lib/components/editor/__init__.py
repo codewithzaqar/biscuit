@@ -3,11 +3,16 @@ import tkinter as tk
 from lib.components.text import Text
 from lib.components.editor.utils.linenumbers import LineNumbers
 from lib.components.editor.utils.binder import Binder
+from lib.components.text.utils import Utils
 
 class Editor(tk.Frame):
     def __init__(self, master, path=None, exists=True, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
         self.base = master.base
+
+        # Editor now owns the font and zoom state
+        self.font = self.base.settings.font
+        self.zoom = self.font["size"]
 
         self.text = Text(master=self, path=path, exists=exists)
         self.linenumbers = LineNumbers(master=self, text=self.text)
@@ -18,11 +23,29 @@ class Editor(tk.Frame):
         self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
         self.linenumbers.pack(side=tk.LEFT, fill=tk.Y)
         self.text.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
+        
+        # Bindings are now handled by the local Binder
+        self.binder = Binder(self)
+        self.binder.bind_all()
 
-        self.text.bind("<<Change>>", self._on_change)
-        self.text.bind("<<Configure>>", self._on_change)
-
-        # self.binder = Binder(bindings=self.base.settings.bindings, editor=self)
-    
-    def _on_change(self, event):
+    def _on_change(self, event=None):
         self.linenumbers.redraw()
+
+    def set_fontsize(self, size):
+        self.font.configure(size=size)
+        # Redraw line numbers when font size changes so they scale correctly
+        self._on_change()
+
+    def refresh_fontsize(self):
+        self.set_fontsize(self.zoom)
+
+    def handle_zoom(self, event):
+        if 5 <= self.zoom <= 50:
+            if event.delta < 0:
+                self.zoom -= 1
+            else:
+                self.zoom += 1
+        self.zoom = Utils.clamp(self.zoom, 5, 50)
+
+        self.refresh_fontsize()
+        return "break"
