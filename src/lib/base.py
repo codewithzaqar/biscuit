@@ -30,9 +30,14 @@ class Base:
         self.active_file = file
         self.trace(f"Active file<{self.active_file}>")
 
-        if file not in self.opened_files:
+        # FIXED: Check against the first element (the path) of each pair
+        if file not in [f[0] for f in self.opened_files]:
+            print("❤❤", self.opened_files)
             self.add_to_open_files(file, exists)
             self.trace(f"File<{self.active_file}> was added.")
+        else:
+            # NEW: If it's already open, just switch to its tab
+            self.root.basepane.top.right.editortabs.set_active_tab(file)
 
     def set_active_dir(self, dir):
         # NEW: Guard against None, empty strings (from canceled dialogs), or invalid paths

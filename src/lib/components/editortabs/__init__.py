@@ -56,3 +56,10 @@ class EditorTabs(ttk.Notebook):
         self.select(self.opened_editors[path][2])
 
         self.base.trace(f"Editor<{path}> was added.")
+
+    def set_active_tab(self, path):
+        if path in self.opened_tabs_data.keys():
+            # Select the editor widget associated with this path
+            self.select(self.opened_editors[path][2])
+        else:
+            self.base.trace(f"Tab<{path}> was not found.")
