@@ -3,13 +3,13 @@ from lib.config.bindings.loadbindings import BindingsLoader
 
 class Bindings:
     # TODO: properties
-    newfile: str
-    newWindow: str
-    openfile: str
-    opendir: str
+    new_file: str
+    new_window: str
+    open_file: str
+    open_dir: str
     save: str
     save_as: str
-    closefile: str
+    close_file: str
     quit: str
     # ...
 
@@ -19,10 +19,10 @@ class Bindings:
         self.map_bindings()
 
     def map_bindings(self):
-        self.new = self.bindings['newFile']
-        self.newWindow = self.bindings['newWindow']
-        self.openfile = self.bindings['openFile']
-        self.opendir = self.bindings['openDir']
+        self.new_file = self.bindings['newFile']
+        self.new_window = self.bindings['newWindow']
+        self.open_file = self.bindings['openFile']
+        self.open_dir = self.bindings['openDir']
         self.save = self.bindings['save']
         self.save_as = self.bindings['saveAs']
         self.closefile = self.bindings['closeFile']
