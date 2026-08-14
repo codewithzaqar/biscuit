@@ -11,13 +11,14 @@ class Base:
     def __init__(self, root, *args, **kwargs):
         self.root = root
         self.settings = Settings()
+        self.bindings = self.settings.bindings
 
         self.active_dir = None
         self.active_file = None
 
         self.opened_files = []
 
-        self.binder = Binder(bindings=self.settings.bindings, base=self)
+        self.binder = Binder(base=self)
 
     def trace(self, e):
         time = datetime.now().strftime('•%H:%M:%S•')
@@ -36,17 +37,15 @@ class Base:
             self.add_to_open_files(file, exists)
             self.trace(f"File<{self.active_file}> was added.")
         else:
-            # NEW: If it's already open, just switch to its tab
             self.root.basepane.top.right.editortabs.set_active_tab(file)
 
     def set_active_dir(self, dir):
-        # NEW: Guard against None, empty strings (from canceled dialogs), or invalid paths
         if not os.path.isdir(dir):
             return
 
         self.active_dir = dir
         self.refresh_dir()
-        self.clean_open_files()
+        self.clean_opened_files()
         self.trace(self.active_dir)
 
     def add_to_open_files(self, file, exists):
@@ -59,40 +58,39 @@ class Base:
         self.open_files.remove(file)
         self.trace(self.open_files)
 
-    def get_open_files(self):
+    def get_opened_files(self):
         return self.open_files
 
-    def clean_open_files(self):
+    def clean_opened_files(self):
         self.open_files = []
         self.trace(self.open_files)
 
-    # NEW: Placeholder for multi-window support
-    # TODO: open file in new window
     def open_in_new_window(self, dir):
         subprocess.Popen(["python", sys.argv[0], dir])
         self.trace('open_in_new_window: {dir}')
 
+    def open_new_window(self):
+        subprocess.Popen(["python", sys.argv[0]])
+        self.trace(f"Open new window")
+
     # ----- interface -----
 
     def newfile(self, event):
-        self.trace('newfile event')
         self.set_active_file(file="Untitled", exists=False)
         self.trace('newfile event')
         pass
 
     def newwindow(self, event):
-        self.trace('newwindow event')
-        pass
+        self.open_new_window()
+        self.trace(f'<NewWindowEvent>(.)')
 
     def openfile(self, event):
-        self.trace('open event')
-        
         self.set_active_file(filedialog.askopenfilename())
+        self.trace(f"<FileOpenEvent>({self.active_file})")
 
     def opendir(self, event):
-        self.trace('opendir event')
-        
         self.set_active_dir(filedialog.askdirectory())
+        self.trace(f'<DirOpenEvent>({self.active_dir})')
 
     def save(self, event):
         self.trace('save event')

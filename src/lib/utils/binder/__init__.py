@@ -2,10 +2,10 @@ from lib.config.bindings import Bindings
 
 
 class Binder:
-    def __init__(self, bindings, base, *args, **kwargs):
+    def __init__(self, base, *args, **kwargs):
         self.base = base
         self.root = self.base.root
-        self.bindings = bindings
+        self.bindings = self.base.bindings
 
         # MUST be bind_all(), not bind()
         self.bind_all()
