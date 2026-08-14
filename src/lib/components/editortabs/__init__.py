@@ -59,7 +59,13 @@ class EditorTabs(ttk.Notebook):
 
     def set_active_tab(self, path):
         if path in self.opened_tabs_data.keys():
-            # Select the editor widget associated with this path
             self.select(self.opened_editors[path][2])
         else:
             self.base.trace(f"Tab<{path}> was not found.")
+
+    def close_active_tab(self):
+        # NEW: Find the currently selected tab and destroy its widget
+        for item in self.winfo_children():
+            if str(item) == self.select():
+                item.destroy()
+                break
