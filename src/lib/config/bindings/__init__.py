@@ -25,5 +25,5 @@ class Bindings:
         self.open_dir = self.bindings['openDir']
         self.save = self.bindings['save']
         self.save_as = self.bindings['saveAs']
-        self.closefile = self.bindings['closeFile']
+        self.close_file = self.bindings['closeFile']
         self.quit = self.bindings['quit']
