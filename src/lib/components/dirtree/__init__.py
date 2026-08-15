@@ -2,6 +2,8 @@ import os
 import tkinter.ttk as ttk
 import tkinter as tk
 
+from lib.components.dirtree.utils.binder import Binder
+
 
 class DirTree(ttk.Treeview):
     def __init__(self, master, startpath, *args, **kwargs):
@@ -9,16 +11,13 @@ class DirTree(ttk.Treeview):
         self.base = master.base
 
         self.configure(columns=("fullpath", "type"), displaycolumns='')
-        # self.heading('#0', text="Explorer", anchor=tk.W)
 
         self.create_root(startpath)
 
-        self.bind("<<TreeviewOpen>>", self.update_tree)
-        self.bind("<<TreeviewSelect>>", self.update_tree)
-        self.bind('<Double-Button-1>', self.openfile)
+        # Bindings are now handled by the local Binder
+        self.binder = Binder(self)
 
     def openfile(self, event):
-        # self = event.widget
         item = self.focus()
         if self.set(item, "type") != 'file':
             return
@@ -44,7 +43,6 @@ class DirTree(ttk.Treeview):
                 ptype = 'file' 
 
             fname = os.path.split(p_path)[1]
-            # CHANGED: 'end' -> tk.END
             oid = self.insert(node, tk.END, text=fname, values=[p_path, ptype])
             if ptype == "directory":
                 self.insert(oid, 0, text="dummy")
@@ -58,7 +56,6 @@ class DirTree(ttk.Treeview):
         dfpath = os.path.abspath(startpath)
         basename = os.path.basename(dfpath)
 
-        # NEW: Set the treeview heading to the current folder's name
         self.heading('#0', text=basename, anchor=tk.W)
 
         for p in os.listdir(dfpath):
