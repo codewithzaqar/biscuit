@@ -13,13 +13,18 @@ class Config:
     # ...
 
 
-    def __init__(self):
-        self.loader = ConfigLoader()
+    def __init__(self, master):
+        self.base = master.base
+
+        self.loader = ConfigLoader(self)
         self.config = self.loader.get_config()
 
         self.load_data()
 
     def load_data(self):
+        self.bindings = Bindings(self)
+        self.theme = Theme(self)
+
         self.theme = self.config['theme']
         font = self.config['font']
         self.font = Font(font['family'], font['size'], font['style'])

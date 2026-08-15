@@ -1,18 +1,11 @@
 import tkinter as tk
 import tkinter.font as Font
-
 import lib.config as config
 
 class Settings:
-
-    config: config.Config
-    bindings: config.Bindings
-
-    font: Font
-    theme: config.Theme
-
-    def __init__(self):
-        self.config = config.Config()
+    def __init__(self, base):
+        self.base = base
+        self.config = config.Config(self)
         self.setup_properties()
 
     def setup_properties(self):
@@ -21,10 +14,10 @@ class Settings:
         self.setup_font()
 
     def setup_theme(self):
-        self.theme = config.Theme(self.config.theme)
+        self.theme = config.Theme(self, self.config.theme)
 
     def setup_bindings(self):
-        self.bindings = config.Bindings()
+        self.bindings = config.Bindings(self)
 
     def setup_font(self):
         self.font = tk.font.Font(
