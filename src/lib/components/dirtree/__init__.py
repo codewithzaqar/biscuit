@@ -9,49 +9,43 @@ class DirTree(ttk.Treeview):
         self.base = master.base
 
         self.configure(columns=("fullpath", "type"), displaycolumns='')
-        self.heading('#0', text="Explorer", anchor=tk.W)
+        # self.heading('#0', text="Explorer", anchor=tk.W)
 
         self.create_root(startpath)
 
         self.bind("<<TreeviewOpen>>", self.update_tree)
-        # self.bind("<<TreeviewSelect>>", self.update_tree)
+        self.bind("<<TreeviewSelect>>", self.update_tree)
         self.bind('<Double-Button-1>', self.openfile)
 
     def openfile(self, event):
-        self = event.widget
+        # self = event.widget
         item = self.focus()
-        # Changed from: if self.set(item, "type") == 'directory'
         if self.set(item, "type") != 'file':
             return
         path = self.set(item, "fullpath")
+
         self.base.set_active_file(path)
 
     def fill_tree(self, node):
         if self.set(node, "type") != 'directory':
             return
 
-        for item in self.get_children(node):
-            self.delete(item)
-
         path = self.set(node, "fullpath")
+
+        # Delete the possibly 'dummy' node present
+        self.delete(*self.get_children(node))
 
         for p in sorted(os.listdir(path)):
             p_path = os.path.join(path, p)
-
-            # Explicit type detection
             ptype = None
             if os.path.isdir(p_path):
                 ptype = 'directory'
             elif os.path.isfile(p_path):
                 ptype = 'file' 
 
-            oid = self.insert(
-                node, "end", 
-                text=p, 
-                values=[p_path, ptype], 
-                open=False
-            )
-
+            fname = os.path.split(p_path)[1]
+            # CHANGED: 'end' -> tk.END
+            oid = self.insert(node, tk.END, text=fname, values=[p_path, ptype])
             if ptype == "directory":
                 self.insert(oid, 0, text="dummy")
 
@@ -60,14 +54,21 @@ class DirTree(ttk.Treeview):
 
     def create_root(self, startpath):
         self.delete(*self.get_children())
-        dfpath = os.path.abspath(startpath)
 
+        dfpath = os.path.abspath(startpath)
         basename = os.path.basename(dfpath)
 
-        node = self.insert(
-            "", 'end', 
-            text=basename, 
-            values=[dfpath, "directory"], 
-            open=True
-        )
-        self.fill_tree(node)
+        # NEW: Instead of creating a root node for the folder itself,
+        # we directly insert its children into the treeview root ('').
+        for p in os.listdir(dfpath):
+            p = os.path.join(dfpath, p)
+            ptype = None
+            if os.path.isdir(p):
+                ptype = 'directory'
+            elif os.path.isfile(p):
+                ptype = 'file'
+
+            fname = os.path.split(p)[1]
+            oid = self.insert('', tk.END, text=fname, values=[p, ptype])
+            if ptype == 'directory':
+                self.insert(oid, 0, text='dummy')
