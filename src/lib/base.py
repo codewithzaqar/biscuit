@@ -5,6 +5,7 @@ import tkinter.filedialog as filedialog
 from datetime import datetime
 
 from lib.settings import Settings
+from lib.utils.events import Events
 from lib.utils.binder import Binder
 
 class Base:
@@ -21,6 +22,7 @@ class Base:
         # [file, exists]
         self.opened_files = []
 
+        self.events = Events(self)
         self.binder = Binder(base=self)
 
     def trace(self, e):
@@ -77,51 +79,3 @@ class Base:
     def open_new_window(self):
         subprocess.Popen(["python", sys.argv[0]])
         self.trace(f"Opened new window")
-
-    # ----- interface -----
-
-    def newfile(self, event):
-        self.set_active_file(file="Untitled", exists=False)
-        self.trace(f'<NewFileEvent>(Untitled)')
-        pass
-
-    def newwindow(self, event):
-        self.open_new_window()
-        self.trace(f'<NewWindowEvent>(.)')
-
-    def openfile(self, event):
-        self.set_active_file(filedialog.askopenfilename())
-        self.trace(f"<FileOpenEvent>({self.active_file})")
-
-    def opendir(self, event):
-        self.set_active_dir(filedialog.askdirectory())
-        self.trace(f'<DirOpenEvent>({self.active_dir})')
-
-    def save(self, event):
-        # NEW: Actually write the editor contents to disk
-        with open(self.active_file, 'w') as f:
-            f.write(self.root.basepane.top.right.editortabs.get_active_text())
-
-        self.trace(f"<FileSaveEvent>({self.active_file})")
-
-    def saveas(self, event):
-        self.trace('saveas event')
-        pass
-
-    def closefile(self, event):
-        # NEW: Delegate to the tab manager to close the active tab
-        self.root.basepane.top.right.editortabs.close_active_tab()
-        self.trace(f'<FileCloseEvent>({self.active_file})')
-
-    def quit(self, event):
-        self.trace('exit event')
-        # self.root.destroy()
-        pass
-
-    def undo(self, event):
-        self.trace('undo event') 
-        pass
-
-    def redo(self, event):
-        self.trace('redo event')
-        pass
