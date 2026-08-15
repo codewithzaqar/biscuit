@@ -58,8 +58,9 @@ class DirTree(ttk.Treeview):
         dfpath = os.path.abspath(startpath)
         basename = os.path.basename(dfpath)
 
-        # NEW: Instead of creating a root node for the folder itself,
-        # we directly insert its children into the treeview root ('').
+        # NEW: Set the treeview heading to the current folder's name
+        self.heading('#0', text=basename, anchor=tk.W)
+
         for p in os.listdir(dfpath):
             p = os.path.join(dfpath, p)
             ptype = None
