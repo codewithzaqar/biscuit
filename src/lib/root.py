@@ -4,6 +4,7 @@ from tkinterDnD import Tk
 
 from lib.base import Base
 from lib.containers import BasePane
+from lib.components.statusbar import StatusBar
 
 
 class Root(Tk):
@@ -19,6 +20,9 @@ class Root(Tk):
 
         self.basepane = BasePane(master=self)
         self.basepane.pack(fill=tk.BOTH, expand=1)
+
+        self.statusbar = StatusBar(master=self)
+        self.statusbar.pack(side=tk.BOTTOM, fill=tk.X)
 
         if dir:
             self.base.set_active_file(dir)

@@ -3,7 +3,7 @@ import time
 from lib.components.statusbar.utils.button import SButton
 
 class SClock(SButton):
-    def __init__(self, *args, *kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.update()
 
