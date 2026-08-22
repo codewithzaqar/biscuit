@@ -32,7 +32,4 @@ class StatusBar(tk.Frame):
         self.line_col_info.pack(side=tk.RIGHT)
 
     def set_line_col_info(self, line, col, selected):
-        text = "Ln {0}, Col {1}".format(line, col)
-        if selected:
-            text += f" ({selected} selected)"
-        self.line_col_info.config(text=text)
+        self.line_col_info.config(text="Ln {0}, Col {1}{2}".format(line, col, f" ({selected} selected)" if selected else ""))
