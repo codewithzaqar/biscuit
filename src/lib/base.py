@@ -80,7 +80,7 @@ class Base:
         subprocess.Popen(["python", sys.argv[0]])
         self.trace(f"Opened new window")
 
-    def update_statusbar(self):
+    def update_statusbar_ln_col_info(self):
         if not self.active_file or self.active_file not in self.root.basepane.top.right.editortabs.opened_editors:
             self.root.statusbar.set_line_col_info("?", "?", 0)
             return
