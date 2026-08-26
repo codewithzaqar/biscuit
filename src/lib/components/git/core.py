@@ -1,5 +1,4 @@
 import git
-
 from lib.components.git import repo
 
 
@@ -11,10 +10,16 @@ class GitCore(git.Git):
         self.repo = None
 
     def open_repo(self):
-        self.repo = repo.GitRepo(self.base.active_dir)
+        try:
+            self.repo = repo.GitRepo(self.base.active_dir)
+        except git.exc.InvalidGitRepositoryError:
+            self.repo = None
 
     def get_version(self):
         return self.version()
 
     def get_active_branch(self):
+        # Return a fallback string if it's not a git repo
+        if self.repo is None:
+            return "Not a repo"
         return self.repo.active_branch
