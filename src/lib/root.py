@@ -5,6 +5,7 @@ from tkinterDnD import Tk
 from lib.base import Base
 from lib.containers import BasePane
 from lib.components.statusbar import StatusBar
+from lib.components.sidebar import Sidebar
 
 
 class Root(Tk):
