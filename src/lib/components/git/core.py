@@ -19,7 +19,6 @@ class GitCore(git.Git):
         return self.version()
 
     def get_active_branch(self):
-        # Return a fallback string if it's not a git repo
         if self.repo is None:
             return "Not a repo"
-        return self.repo.active_branch
+        return self.repo.active_branch.name
