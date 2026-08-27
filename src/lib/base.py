@@ -8,6 +8,7 @@ from lib.settings import Settings
 from lib.utils.events import Events
 from lib.utils.binder import Binder
 from lib.components.git import GitCore
+from lib.components.git import GitWindow
 
 class Base:
     def __init__(self, root, *args, **kwargs):
@@ -30,6 +31,8 @@ class Base:
 
         self.events = Events(self)
         self.binder = Binder(base=self)
+
+        self.binder.bind('<Control-g>', self.open_git_window)
 
     def trace(self, e):
         time = datetime.now().strftime('•%H:%M:%S•')
@@ -89,6 +92,9 @@ class Base:
     def open_new_window(self):
         subprocess.Popen(["python", sys.argv[0]])
         self.trace(f"Opened new window")
+
+    def open_git_window(self, _):
+        self.git_window = GitWindow(self)
 
     def update_git(self):
         self.git.open_repo()

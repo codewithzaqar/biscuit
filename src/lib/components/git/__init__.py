@@ -12,7 +12,7 @@ class GitWindow(tk.Toplevel):
 
         self.core = self.base.git
         self.init_window()
-        self.init_wingets()
+        self.init_widgets()
 
     def init_window(self):
         self.title("Bisgit")
@@ -20,3 +20,4 @@ class GitWindow(tk.Toplevel):
 
     def init_widgets(self):
         self.lbl = tk.Label(self, text=f"branch: {self.core.get_active_branch()}")
+        self.lbl.pack(pady=20, padx=20)
