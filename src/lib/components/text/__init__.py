@@ -26,11 +26,13 @@ class Text(tk.Text):
             with open(path, 'r') as data:
                 self.data = data.read()
                 self.clear_insert()
+                self.set_active(True)
+                self.set_wrap(False)
         except:
-            # NEW: Show a funny message instead of falling silently
+            self.set_wrap(True)
             self.data = "This file is not displayed in this editor because it is either binary or uses an unsupported text encoding. Do you want to open it anyway? Nah you can't :)"
             self.clear_insert()
-            self.set_wrap(True)
+            self.set_active(False)
 
     def clear_insert(self):
         self.clear()
@@ -91,6 +93,13 @@ class Text(tk.Text):
             self.configure(wrap=tk.WORD)
         else:
             self.configure(wrap=tk.NONE)
+
+    # NEW: Toggles the read-only state of the text widget
+    def set_active(self, flag=True):
+        if flag:
+            self.configure(state=tk.NORMAL)
+        else:
+            self.configure(state=tk.DISABLED)
 
     # ----- Proxy (unchanged) -----
 
