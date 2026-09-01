@@ -12,14 +12,15 @@ class EditorTabs(ttk.Notebook):
         # dnd
         self.configure(ondrop=self.drop)
 
-        self.opened_tabs_data = {}
-        self.opened_editors = {}
-
-        # data
-        # {path: [name, exists]}
-
-        # editors
+        # NEW: Cache for closed tabs to preserve state
+        self.closed_tabs = {}
         # {path: [name, exists, editor]}
+
+        self.opened_editors = {}
+        # {path: [name, exists, editor]}
+
+        # NEW: Sync Base.active_file when user clicks a different tab
+        self.bind("<<NotebookTabChanged>>", self.refresh_active_file)
 
     def drop(self, event):
         if os.path.isfile(event.data):
@@ -29,16 +30,24 @@ class EditorTabs(ttk.Notebook):
 
         self.base.trace(f"Dropped file: {event.data}")
 
+    # NEW: Handles tab switching
+    def refresh_active_file(self, e):
+        for editor in self.opened_editors.items():
+            if self.index(editor[1][2]) == self.index(self.select()):
+                self.base.active_file = editor[0]
+                self.base.trace(f"Active tab was changed to {editor[0]}")
+                break
+        print(self.base.active_file)
+
+    # REFACTORED: Merged update_opened_editors directly into update_tabs
     def update_tabs(self):
-        for filepath in self.base.opened_files:
-            filename = os.path.basename(filepath[0])
-            if filepath[0] not in self.opened_tabs_data.keys():
+        for opened_file in self.base.opened_files:
+            filename = os.path.basename(opened_file[0])
+            if opened_file[0] not in self.opened_editors.keys() or not opened_file[1]:
+                self.add_editor(filename, opened_file[1], opened_file[0])
+                self.base.trace(f"Tab<{opened_file}> was added.")
 
-                self.opened_tabs_data[filepath[0]] = [filename, filepath[1]]
-                self.base.trace(f"Tab<{filepath}> was added.")
-
-        self.update_opened_editors()
-        self.base.trace(f"Opened Tabs {self.opened_tabs_data}")
+        self.base.trace(f"Opened Tabs {self.opened_editors}")
 
     def update_opened_editors(self):
         for path, data in self.opened_tabs_data.items():
@@ -46,11 +55,17 @@ class EditorTabs(ttk.Notebook):
                 self.add_editor(data[0], data[1], path)
         self.base.trace(f"Opened editors {self.opened_editors.keys()}")
 
+    # REFACTORED: Now checks closed_tabs cache before creating a new Editor
     def add_editor(self, name, exists, path):
-
-        self.opened_editors[path] = [name, exists, Editor(self, path, exists)]
-        self.opened_editors[path][2].configure(height=25, width=75)
-        self.add(self.opened_editors[path][2], text=name)
+        if not path in self.closed_tabs.keys():
+            self.opened_editors[path] = [name, exists, Editor(self, path, exists)]
+            self.opened_editors[path][2].configure(height=25, width=75)
+            self.add(self.opened_editors[path][2], text=name)
+        else:
+            # Restore from cache!
+            self.opened_editors[path] = self.closed_tabs.pop(path)
+            self.opened_editors[path][2].configure(height=25, width=75)
+            self.add(self.opened_editors[path][2], text=name)
 
         # NEW: switch to newly added tab
         self.select(self.opened_editors[path][2])
@@ -70,21 +85,21 @@ class EditorTabs(ttk.Notebook):
                 break
 
     def get_active_tab(self):
-        if self.base.active_file:
-            return self.opened_editors[self.base.active_file][2]
+        return self.opened_editors[self.base.active_file][2]
 
     def get_active_text(self):
-        if self.base.active_file and self.base.active_file in self.opened_editors:
-            return self.opened_editors[self.base.active_file][2].text.get_all_text()
-        return ""
+        return self.opened_editors[self.base.active_file][2].text.get_all_text()
 
+    # REPLACES close_active_tab: Hides the tab instead of destroying it
     def remove_tab(self, path):
-        if path in self.opened_editors:
-            # Destroy the actual Tkinter widget
-            editor_widget = self.opened_editors[path][2]
-            editor_widget.destroy()
+        if not tab:
+            return
 
-            # Clean up the internal dictionaries
-            del self.opened_editors[path]
-            if path in self.opened_tabs_data:
-                del self.opened_tabs_data[path]
+        self.closed_tabs[tab] = self.opened_editors[tab]
+        self.hide(self.opened_editors[tab][2])
+
+        self.opened_editors.pop(tab)
+        self.update_tabs()
+
+        self.base.trace(f"Active tab was closed.")
+        self.base.trace(f"Closed Tabs {self.closed_tabs}")
