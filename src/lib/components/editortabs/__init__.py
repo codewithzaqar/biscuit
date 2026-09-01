@@ -91,7 +91,7 @@ class EditorTabs(ttk.Notebook):
         return self.opened_editors[self.base.active_file][2].text.get_all_text()
 
     # REPLACES close_active_tab: Hides the tab instead of destroying it
-    def remove_tab(self, path):
+    def remove_tab(self, tab):
         if not tab:
             return
 

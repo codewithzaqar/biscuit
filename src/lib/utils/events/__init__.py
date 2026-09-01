@@ -3,9 +3,11 @@ import tkinter.filedialog as filedialog
 class Events:
     def __init__(self, master):
         self.base = master
+        self.count = 1
 
     def newfile(self, event):
-        self.base.set_active_file(file="Untitled", exists=False)
+        self.base.set_active_file(file=f"Untitled-{self.count}", exists=False)
+        self.count += 1
         self.base.trace(f'<NewFileEvent>(Untitled)')
 
     def newwindow(self, event):
@@ -31,14 +33,13 @@ class Events:
         pass
 
     def closefile(self, event):
-        # NEW: Delegate to the tab manager to close the active tab
-        self.base.root.basepane.top.right.editortabs.close_active_tab()
-        self.base.trace(f'<FileCloseEvent>')
+        # CHAMGED: Use the centralized Base method instead of the old UI method
+        self.base.close_active_file()
+        self.base.trace(f'<FileCloseEvent>({self.base.active_filei})')
 
     def quit(self, event):
         self.base.root.destroy()
         self.base.trace(f"<ApplicationQuitEvent>")
-        pass
 
     def undo(self, event):
         self.base.trace('undo event') 
