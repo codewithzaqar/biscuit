@@ -33,7 +33,7 @@ class Events:
     def closefile(self, event):
         # NEW: Delegate to the tab manager to close the active tab
         self.base.root.basepane.top.right.editortabs.close_active_tab()
-        self.base.trace(f'<FileCloseEvent>({self.active_file})')
+        self.base.trace(f'<FileCloseEvent>')
 
     def quit(self, event):
         self.base.root.destroy()

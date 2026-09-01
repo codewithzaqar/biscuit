@@ -77,3 +77,14 @@ class EditorTabs(ttk.Notebook):
         if self.base.active_file and self.base.active_file in self.opened_editors:
             return self.opened_editors[self.base.active_file][2].text.get_all_text()
         return ""
+
+    def remove_tab(self, path):
+        if path in self.opened_editors:
+            # Destroy the actual Tkinter widget
+            editor_widget = self.opened_editors[path][2]
+            editor_widget.destroy()
+
+            # Clean up the internal dictionaries
+            del self.opened_editors[path]
+            if path in self.opened_tabs_data:
+                del self.opened_tabs_data[path]
