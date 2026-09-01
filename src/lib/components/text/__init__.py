@@ -41,7 +41,7 @@ class Text(tk.Text):
     def get_all_text(self):
         return self.get(1.0, tk.END)
 
-    def get_selected(self):
+    def get_selected_text(self):
         try:
             return self.selection_get()
         except Exception:

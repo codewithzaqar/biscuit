@@ -31,10 +31,13 @@ class EditorTabs(ttk.Notebook):
         self.base.trace(f"Dropped file: {event.data}")
 
     # NEW: Handles tab switching
-    def refresh_active_file(self, e):
+    def refresh_active_file(self, e=None):
+        self.base.active_file = None
+
         for editor in self.opened_editors.items():
             if self.index(editor[1][2]) == self.index(self.select()):
                 self.base.active_file = editor[0]
+                self.base.update_statusbar_ln_col_info()
                 self.base.trace(f"Active tab was changed to {editor[0]}")
                 break
         print(self.base.active_file)
@@ -100,6 +103,8 @@ class EditorTabs(ttk.Notebook):
 
         self.opened_editors.pop(tab)
         self.update_tabs()
+
+        self.refresh_active_file()
 
         self.base.trace(f"Active tab was closed.")
         self.base.trace(f"Closed Tabs {self.closed_tabs}")

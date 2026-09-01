@@ -35,7 +35,7 @@ class Events:
     def closefile(self, event):
         # CHAMGED: Use the centralized Base method instead of the old UI method
         self.base.close_active_file()
-        self.base.trace(f'<FileCloseEvent>({self.base.active_filei})')
+        self.base.trace(f'<FileCloseEvent>({self.base.active_file})')
 
     def quit(self, event):
         self.base.root.destroy()
