@@ -1,6 +1,6 @@
 import tkinter as tk
 import tkinter.font as Font
-import lib.config as config
+from .. import config
 
 class Settings:
     def __init__(self, base):

@@ -2,11 +2,11 @@ import os
 import tkinter as tk
 from tkinterDnD import Tk
 
-from lib.base import Base
-from lib.containers import BasePane
-from lib.components.statusbar import StatusBar
-from lib.components.sidebar import Sidebar
-from lib.components.popup import PopupMenu
+from .base import Base
+from .containers import BasePane
+from .components.statusbar import StatusBar
+from .components.sidebar import Sidebar
+from .components.popup import PopupMenu
 
 
 class Root(Tk):

@@ -1,9 +1,9 @@
 import tkinter as tk
 
-from lib.components.text import Text
-from lib.components.editor.utils.linenumbers import LineNumbers
-from lib.components.editor.utils.binder import Binder
-from lib.components.text.utils import Utils
+from ..text import Text
+from .utils.linenumbers import LineNumbers
+from .utils.binder import Binder
+from ..text.utils import Utils
 
 class Editor(tk.Frame):
     def __init__(self, master, path=None, exists=True, *args, **kwargs):

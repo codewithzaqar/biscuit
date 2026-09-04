@@ -1,5 +1,5 @@
 import git
-from lib.components.git import repo
+from . import repo
 
 
 class GitCore(git.Git):
