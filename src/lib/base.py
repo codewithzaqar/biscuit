@@ -120,7 +120,7 @@ class Base:
 
     def update_statusbar_ln_col_info(self):
         if self.active_file:
-            self.root.statusbar.configure_line_col_info(True)
+            self.root.statusbar.configure_editmode(True)
             active_text = self.root.basepane.top.right.editortabs.get_active_tab().text
             self.root.statusbar.set_line_col_info(
                 active_text.line,
@@ -128,4 +128,4 @@ class Base:
                 active_text.get_selected_count()
             )
         else:
-            self.root.statusbar.configure_line_col_info(False)
+            self.root.statusbar.configure_editmode(False)

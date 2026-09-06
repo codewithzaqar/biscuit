@@ -55,21 +55,28 @@ class StatusBar(tk.Frame):
         self.encoding.show()
         self.line_col_info.show()
 
-    def configure_line_col_info(self, enabled):
+    def configure_editmode(self, enabled):
         if enabled:
-            if not self.line_col_info.enabled:
-                self.clock.hide()
-                self.file_type.hide()
-                self.eol.hide()
-                self.encoding.hide()
+            self.clock.show()
+            self.file_type.show()
+            self.eol.show()
+            self.encoding.show()
+            self.line_col_info.show()
+        else:
+            # Notice the clock is NOT hidden here!
+            self.file_type.hide()
+            self.eol.hide()
+            self.encoding.hide()
+            self.line_col_info.hide()
 
-                self.clock.show()
-                self.file_type.show()
-                self.eol.show()
-                self.encoding.show()
-            else:
-                if self.line_col_info.enabled:
-                    self.line_col_info.hide()
+    # NEW: Manages the left-side Git branch indicator independently
+    def configure_git_info(self, enabled):
+        if enabled:
+            if not self.branch.enabled:
+                self.branch.show()
+        else:
+            if self.branch.enabled:
+                self.branch.hide()
 
     def set_git_info(self, branch):
         self.branch.config(text=" {0}".format(branch))
