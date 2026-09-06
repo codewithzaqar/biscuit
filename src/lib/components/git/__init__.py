@@ -66,4 +66,4 @@ class GitWindow(tk.Toplevel):
         self.tree.add_tree("Changes", untracked_files)
 
         self.title(f"{repo.working_tree_dir}")
-        self.vm_geometry("600x300")
+        self.wm_geometry("600x300")
