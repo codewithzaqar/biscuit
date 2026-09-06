@@ -1,4 +1,5 @@
 import git
+
 from . import repo
 
 
@@ -12,8 +13,9 @@ class GitCore(git.Git):
     def open_repo(self):
         try:
             self.repo = repo.GitRepo(self.base.active_dir)
+            self.base.set_git_found(True)
         except git.exc.InvalidGitRepositoryError:
-            self.repo = None
+            self.base.set_git_found(False)
 
     def get_version(self):
         return self.version()

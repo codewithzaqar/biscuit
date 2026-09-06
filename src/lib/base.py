@@ -41,6 +41,9 @@ class Base:
         time = datetime.now().strftime('•%H:%M:%S•')
         print(f'TRACE {time} {e}')
 
+    def set_git_found(self, found):
+        self.git_found = found
+
     def refresh_dir(self):
         self.root.basepane.top.left.dirtree.create_root(self.active_dir)
 
@@ -65,6 +68,7 @@ class Base:
             return
 
         self.active_dir = dir
+        self.check_git()
         self.update_git()
         self.refresh_dir()
         self.clean_opened_files()
@@ -111,11 +115,18 @@ class Base:
     def open_git_window(self, _):
         self.git_window = GitWindow(self)
 
-    def update_git(self):
+    def check_git(self):
         self.git.open_repo()
-        self.update_statusbar_git_info()
+
+    def update_git(self):
+        if self.git_found:
+            self.root.statusbar.configure_git_info(True)
+            self.update_statusbar_git_info()
+        else:
+            self.root.statusbar.configure_git_info(False)
 
     def update_statusbar_git_info(self):
+        self.root.statusbar.configure_git_info(True)
         self.root.statusbar.set_git_info(self.git.get_active_branch())
 
     def update_statusbar_ln_col_info(self):
