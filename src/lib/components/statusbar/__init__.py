@@ -4,7 +4,9 @@ from .utils.label import SLabel
 from .utils.button import SButton
 from .utils.clock import SClock
 
-from ..popup import PopupMenu
+# UPDATED: Import the specific popups instead of the generic base class
+from .popups.eol import EOLPopup
+from .popups.encoding import EncodingPopup
 
 class StatusBar(tk.Frame):
     def __init__(self, master, *args, **kwargs):
@@ -22,11 +24,19 @@ class StatusBar(tk.Frame):
         self.line_col_info = SButton(self, text="Ln ?, Col ?")
         self.line_col_info.set_pack_data(side=tk.RIGHT)
 
+        # NEW: Encoding buttion + popup binding
+        # encoding
         self.encoding = SButton(self, text="UTF-8")
         self.encoding.set_pack_data(side=tk.RIGHT)
+        self.encoding_popup = EncodingPopup(self)
+        self.encoding.bind("<Button-1>", self.encoding_popup.show)
 
+        # NEW: EOL button + popup binding
+        # end of line
         self.eol = SButton(self, text="CRLF")
         self.eol.set_pack_data(side=tk.RIGHT)
+        self.eol_popup = EOLPopup(self)
+        self.eol.bind("<Button-1>", self.encoding_popup.show)
 
         self.file_type = SButton(self, text="Plain Text")
         self.file_type.set_pack_data(side=tk.RIGHT)
@@ -34,6 +44,7 @@ class StatusBar(tk.Frame):
         self.clock = SClock(self, text="H:M:S")
         self.clock.set_pack_data(side=tk.RIGHT)
 
+        # Show all widgets using stored pack data
         self.branch.show()
         self.sample.show()
 
