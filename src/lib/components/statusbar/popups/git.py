@@ -2,4 +2,15 @@ from ...popup import PopupMenu
 
 
 class GitPopup(PopupMenu):
-    pass
+    def __init__(self, master, *args, **kwargs):
+        # Currently hardcoded, but ready for dynamic branch lists
+        self.items = [
+            ("master", lambda: self.select_branch("master")),
+            ("dev", lambda: self.select_branch("dev"))
+        ]
+
+        super().__init__(master, *args, **kwargs)
+        self.base = master.base
+
+    def select_branch(self, branch):
+        pass

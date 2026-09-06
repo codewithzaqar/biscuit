@@ -7,6 +7,7 @@ from .utils.clock import SClock
 from .popups.eol import EOLPopup
 from .popups.encoding import EncodingPopup
 from .popups.filetype import FileTypePopup
+from .popups.git import GitPopup
 
 class StatusBar(tk.Frame):
     def __init__(self, master, *args, **kwargs):
@@ -14,8 +15,11 @@ class StatusBar(tk.Frame):
         self.base = master.base
 
         # Left side
-        self.branch = SButton(self, text="master")
+        # git info
+        self.branch = SButton(self, text=" master")
         self.branch.set_pack_data(side=tk.LEFT)
+        self.git_popup = GitPopup(self)
+        self.branch.bind("<Button-1>", self.git_popup.show)
 
         # Right side
         self.line_col_info = SButton(self, text="Ln ?, Col ?")
