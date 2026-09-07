@@ -1,78 +1,34 @@
-import os
-import tkinter.ttk as ttk
 import tkinter as tk
+import tkinter.ttk as ttk
 
-from .utils.binder import Binder
+from .tree import DirTreeTree
+from ..utils.scrollbar import AutoScrollbar
 
 
-class DirTree(ttk.Treeview):
+class DirTree(tk.Frame):
     def __init__(self, master, startpath=None, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
         self.base = master.base
 
-        self.configure(columns=("fullpath", "type"), displaycolumns='')
+        # Allow the tree to expand and fill the frame
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure(0, weight=1)
 
-        if startpath:
-            self.create_root(startpath)
-        else:
-            self.set_heading('No Folder Opened')
-            self.insert('', 0, text='You have not yet opened a folder.')
+        # Initialize the actual tree widget
+        self.tree = DirTreeTree(self, startpath=startpath)
+        self.tree.grid(row=0, column=0, sticky=tk.NSEW)
 
-        self.binder = Binder(self)
+        # Initialize the auto-hiding scrollbar and link it to the tree
+        self.scrollbar = AutoScrollbar(self, orient=tk.VERTICAL, command=self.tree.yview)
+        self.scrollbar.grid(row=0, column=1, sticky=tk.NS)
 
-    def set_heading(self, text):
-        self.heading('#0', text=text, anchor=tk.W)
-
-    def openfile(self, event):
-        item = self.focus()
-        if self.set(item, "type") != 'file':
-            return
-        path = self.set(item, "fullpath")
-
-        self.base.set_active_file(path)
-
-    def fill_tree(self, node):
-        if self.set(node, "type") != 'directory':
-            return
-
-        path = self.set(node, "fullpath")
-
-        # Delete the possibly 'dummy' node present
-        self.delete(*self.get_children(node))
-
-        for p in sorted(os.listdir(path)):
-            p_path = os.path.join(path, p)
-            ptype = None
-            if os.path.isdir(p_path):
-                ptype = 'directory'
-            elif os.path.isfile(p_path):
-                ptype = 'file' 
-
-            fname = os.path.split(p_path)[1]
-            oid = self.insert(node, tk.END, text=fname, values=[p_path, ptype])
-            if ptype == "directory":
-                self.insert(oid, 0, text="dummy")
-
-    def update_tree(self, event):
-        self.fill_tree(self.focus())
+        self.tree.configure(yscrollcommand=self.scrollbar.set)
 
     def create_root(self, startpath):
-        self.delete(*self.get_children())
+        self.tree.create_root(startpath)
 
-        dfpath = os.path.abspath(startpath)
-        basename = os.path.basename(dfpath)
+    def set_heading(self, text):
+        self.tree.set_heading(text)
 
-        self.set_heading(basename)
-
-        for p in os.listdir(dfpath):
-            p = os.path.join(dfpath, p)
-            ptype = None
-            if os.path.isdir(p):
-                ptype = 'directory'
-            elif os.path.isfile(p):
-                ptype = 'file'
-
-            fname = os.path.split(p)[1]
-            oid = self.insert('', tk.END, text=fname, values=[p, ptype])
-            if ptype == 'directory':
-                self.insert(oid, 0, text='dummy')
+    def openfile(self, event):
+        self.tree.openfile(event)
