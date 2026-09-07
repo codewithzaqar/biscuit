@@ -1,28 +1,39 @@
 import tkinter as tk
+import tkinter.font as Font
 
 from ..text import Text
+from ..text.utils import Utils
+
 from .utils.linenumbers import LineNumbers
 from .utils.binder import Binder
-from ..text.utils import Utils
+from ..utils.scrollbar import AutoScrollbar
 
 class Editor(tk.Frame):
     def __init__(self, master, path=None, exists=True, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
         self.base = master.base
+        self.master = master
 
-        # Editor now owns the font and zoom state
-        self.font = self.base.settings.font
-        self.zoom = self.font["size"]
+        self.path = path
+        self.exists = exists
+
+        self.font = Font.Font(family='Consolas', size=11)
+        self.relief = tk.FLAT
+
+        self.config(bg="#ffffff")
 
         self.text = Text(master=self, path=path, exists=exists)
         self.linenumbers = LineNumbers(master=self, text=self.text)
 
-        self.scrollbar = tk.Scrollbar(self, orient="vertical", command=self.text.yview)
+        self.scrollbar = AutoScrollbar(self, orient=tk.VERTICAL, command=self.text.yview)
         self.text.configure(yscrollcommand=self.scrollbar.set)
 
-        self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-        self.linenumbers.pack(side=tk.LEFT, fill=tk.Y)
-        self.text.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
+        self.columnconfigure(1, weight=1)
+        self.rowconfigure(0, weight=1)
+
+        self.linenumbers.grid(row=0, column=0, sticky=tk.NS)
+        self.text.grid(row=0, column=1, sticky=tk.NSEW)
+        self.scrollbar.grid(row=0, column=2, sticky=tk.NS)
         
         # Bindings are now handled by the local Binder
         self.binder = Binder(self)
