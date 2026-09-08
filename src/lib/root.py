@@ -3,7 +3,7 @@ import tkinter as tk
 from tkinterDnD import Tk
 
 from .base import Base
-from .containers import BasePane
+from .containers.base import BasePane
 from .components.statusbar import StatusBar
 from .components.sidebar import Sidebar
 

@@ -1,8 +1,7 @@
 import tkinter as tk
 
-# from .left import LeftPane
-from .right import RightPane
-from ..components.dirtree import DirTreePane
+from ..right import RightPane
+from ...components.dirtree import DirTreePane
 
 
 class BasePane(tk.PanedWindow):
@@ -13,7 +12,7 @@ class BasePane(tk.PanedWindow):
         self.configure(orient=tk.HORIZONTAL)
 
         self.right = RightPane(self)
-        self.dirtree = DirTreePane(self, before=self.right)
+        self.dirtree = DirTreePane(self, active=True, before=self.right)
 
         self.left_panes = [self.dirtree]
 
