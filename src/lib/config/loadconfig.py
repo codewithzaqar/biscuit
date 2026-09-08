@@ -9,8 +9,7 @@ class ConfigLoader:
 
     def load_config(self):
         # Resolves to e.g. /path/to/repo/src/config/settings.json
-        path = os.path.join(self.base.appdir, 'config', self.config_file)
-        with open(path, 'r') as settingsfile:
+        with open(self.base.get_config_path(self.config_file), 'r') as settingsfile:
             config = json.load(settingsfile)
         return config
 

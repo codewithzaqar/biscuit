@@ -44,7 +44,7 @@ class Base:
         return os.path.join(self.appdir, 'config', config_file)
 
     def get_themes_path(self, theme_name):
-        return os.path.join(self.appdir, 'config/themes', theme_name)
+        return os.path.join(self.appdir, 'config', 'themes', theme_name)
 
     def get_bindings_path(self, bindings_file):
         return os.path.join(self.appdir, 'config/bindings', bindings_file)

@@ -7,4 +7,4 @@ class Theme:
         self.theme_name = theme_name
 
         self.loader = ThemeLoader(self, self.theme_name)
-        self.theme = self.loader.get_loaded_theme()
+        self.theme = self.loader.theme_data

@@ -8,8 +8,7 @@ class BindingsLoader:
 
     def load_bindings(self):
         # Uses dynamic appdir
-        path = os.path.join(self.base.appdir, 'config', 'bindings', 'bindings.json')
-        with open(path, 'r') as bindings_file:
+        with open(self.base.get_bindings_path('bindings.json'), 'r') as bindings_file:
             bindings_data = json.load(bindings_file)
         return bindings_data
 
