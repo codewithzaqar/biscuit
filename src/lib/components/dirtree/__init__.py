@@ -11,18 +11,21 @@ class DirTreePane(SidePane):
         self.base = master.base 
 
         # Allow the tree to expand and fill the frame
-        self.grid_rowconfigure(0, weight=1)
+        self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
+        self.label = tk.Label(self, text="Explorer", anchor=tk.W, padx=10, pady=10)
+        self.label.grid(row=0, column=0, sticky=tk.EW)
+
         # Initialize the actual tree widget
-        self.tree = DirTreeTree(self)
+        self.tree = DirTreeTree(self, selectmode=tk.BROWSE)
         self.tree.grid(row=0, column=0, sticky=tk.NSEW)
 
         # Initialize the auto-hiding scrollbar and link it to the tree
-        self.scrollbar = AutoScrollbar(self, orient=tk.VERTICAL, command=self.tree.yview)
-        self.scrollbar.grid(row=0, column=1, sticky=tk.NS)
+        self.tree_scrollbar = AutoScrollbar(self, orient=tk.VERTICAL, command=self.tree.yview)
+        self.tree_scrollbar.grid(row=1, column=1, sticky=tk.NS)
 
-        self.tree.configure(yscrollcommand=self.scrollbar.set)
+        self.tree.configure(yscrollcommand=self.tree_scrollbar.set)
 
     def create_root(self, startpath):
         self.tree.create_root(startpath)
