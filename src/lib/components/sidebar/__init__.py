@@ -2,24 +2,24 @@ import tkinter as tk
 
 
 class Sidebar(tk.Frame):
-    def __init__(self, master, *args, **kwargs):
+    def __init__(self, master, left_panes=None, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
         self.base = master.base
         self.master = master
 
+        self.left_panes = left_panes
+
         self.config(width=60, bg='#FFFFFF', relief=tk.FLAT, borderwidth=2)
 
-        # NEW: Dynamically create a button for every registered side pane
-        for i in self.master.left_panes:
+        for i in self.left_panes:
             btn = self.create_button(text="A")
             self.bind_button(btn, i)
 
-        # Hardcoded settings button at the bottom
         self.settings_btn = tk.Menubutton(self, height=3, width=6, relief=tk.FLAT, text="F", font=("Consolas", 10), bg="#DEDDDD", fg="#000000", activebackground="#A9A9A9", activeforeground="#45494c")
         self.settings_btn.pack(fill=tk.X, side=tk.BOTTOM)
 
     def remove_all_except(self, frame):
-        for i in self.master.left_panes:
+        for i in self.left_panes:
             if i != frame and i.active:
                 i.toggle()
 

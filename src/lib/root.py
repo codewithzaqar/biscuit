@@ -5,7 +5,16 @@ from tkinterDnD import Tk
 from .base import Base
 from .containers import BasePane
 from .components.statusbar import StatusBar
+from .components.sidebar import Sidebar
+
 from .components.popup import PopupMenu
+
+
+# NEW: A simple Frame to hold the Sidebar and BasePane side-by-side
+class PrimaryPane(tk.Frame):
+    def __init__(self, master, *args, **kwargs):
+        super().__init__(master, *args, **kwargs)
+        self.base = master.base
 
 
 class Root(Tk):
@@ -19,7 +28,7 @@ class Root(Tk):
 
         self.base = Base(root=self)
 
-        # NEW: Temporary Command Palette integration for testing
+        # temp
         menus = [("Test 1", lambda e=None: print("Test 1")), ("Test 2", lambda e=None: print("Test 2")),
             ("Test 3", lambda e=None: print("Test 3")), ("Test 4", lambda e=None: print("Test 4"))]
 
@@ -27,9 +36,16 @@ class Root(Tk):
             self, menus, prompt=">",
             watermark="Search Something Here", bg="#f3f3f3")
         self.bind("<Control-n>", self.popup.show)
+
+        # NEW: Initialize the PrimaryPane to hold the main workspace
+        self.primarypane = PrimaryPane(self)
+        self.primarypane.pack(fill=tk.BOTH, expand=True)
         
-        self.basepane = BasePane(master=self) #, sashpad=5 #,opaqueresize=False)
-        self.basepane.pack(fill=tk.BOTH, expand=1)
+        self.basepane = BasePane(master=self.primarypane) #, sashpad=5 #,opaqueresize=False)
+        self.basepane.pack(fill=tk.BOTH, expand=1, side=tk.RIGHT)
+
+        self.sidebar = Sidebar(self.primarypane, self.basepane.left_panes)
+        self.sidebar.pack(side=tk.RIGHT, fill=tk.Y)
 
         self.statusbar = StatusBar(master=self)
         self.statusbar.pack(side=tk.BOTTOM, fill=tk.X)
