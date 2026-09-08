@@ -5,32 +5,32 @@ class Sidebar(tk.Frame):
     def __init__(self, master, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
         self.base = master.base
+        self.master = master
 
-        # NEW: Clean white background for the sidebar frame
-        self.config(width=50, bg='#FFFFFF', relief=tk.FLAT, borderwidth=2)
+        self.config(width=60, bg='#FFFFFF', relief=tk.FLAT, borderwidth=2)
 
-        # UPDATED: Uniform light gray buttons with dark text and hover states
-        btn_style = dict(
-            height=3, width=6, relief=tk.FLAT, font=("Consolas", 10), 
-            bg="#DEDDDD", fg="#000000", 
-            activebackground="#A9A9A9", activeforeground="#45494c"
-        )
+        # NEW: Dynamically create a button for every registered side pane
+        for i in self.master.left_panes:
+            btn = self.create_button(text="A")
+            self.bind_button(btn, i)
 
-        btn1 = tk.Menubutton(self, text="A", **btn_style)
-        btn1.pack(fill=tk.X, side=tk.TOP)
-        
-        btn2 = tk.Menubutton(self, text="B", **btn_style)
-        btn2.pack(fill=tk.X, side=tk.TOP)
-        
-        btn3 = tk.Menubutton(self, text="C", **btn_style)
-        btn3.pack(fill=tk.X, side=tk.TOP)
-        
-        btn4 = tk.Menubutton(self, text="D", **btn_style)
-        btn4.pack(fill=tk.X, side=tk.TOP)
-        
-        btn5 = tk.Menubutton(self, text="E", **btn_style)
-        btn5.pack(fill=tk.X, side=tk.TOP)
+        # Hardcoded settings button at the bottom
+        self.settings_btn = tk.Menubutton(self, height=3, width=6, relief=tk.FLAT, text="F", font=("Consolas", 10), bg="#DEDDDD", fg="#000000", activebackground="#A9A9A9", activeforeground="#45494c")
+        self.settings_btn.pack(fill=tk.X, side=tk.BOTTOM)
 
-        # NEW: 6th button anchored to the bottom (usually for Settings/Gear icon)
-        btn6 = tk.Menubutton(self, text="F", **btn_style)
-        btn6.pack(fill=tk.X, side=tk.BOTTOM)
+    def remove_all_except(self, frame):
+        for i in self.master.left_panes:
+            if i != frame and i.active:
+                i.toggle()
+
+    def create_button(self, text):
+        btn = tk.Menubutton(self, height=3, width=6, relief=tk.FLAT, text=text, font=("Consolas", 10), bg="#DEDDDD", fg="#000000", activebackground="#A9A9A9", activeforeground="#45494c")
+        btn.pack(fill=tk.X, side=tk.TOP)
+        return btn
+
+    def bind_button(self, button, frame):
+        button.bind('<Button-1>', lambda e: self.on_click(frame))
+
+    def on_click(self, frame):
+        self.remove_all_except(frame)
+        frame.toggle()

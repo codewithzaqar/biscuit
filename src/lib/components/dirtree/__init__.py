@@ -1,21 +1,21 @@
 import tkinter as tk
-import tkinter.ttk as ttk
 
+from ..sidebar.pane import SidePane
 from .tree import DirTreeTree
 from ..utils.scrollbar import AutoScrollbar
 
 
-class DirTree(tk.Frame):
-    def __init__(self, master, startpath=None, *args, **kwargs):
-        super().__init__(master, *args, **kwargs)
-        self.base = master.base
+class DirTreePane(SidePane):
+    def __init__(self, master, before=None, *args, **kwargs):
+        super().__init__(master, before=before, *args, **kwargs)
+        self.base = master.base 
 
         # Allow the tree to expand and fill the frame
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
         # Initialize the actual tree widget
-        self.tree = DirTreeTree(self, startpath=startpath)
+        self.tree = DirTreeTree(self)
         self.tree.grid(row=0, column=0, sticky=tk.NSEW)
 
         # Initialize the auto-hiding scrollbar and link it to the tree

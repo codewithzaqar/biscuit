@@ -60,7 +60,7 @@ class Base:
         self.git_found = found
 
     def refresh_dir(self):
-        self.root.basepane.left.dirtree.create_root(self.active_dir)
+        self.root.basepane.dirtree.create_root(self.active_dir)
 
     def set_active_file(self, file, exists=True):
         # Guard against empty file paths (e.g., from a canceled dialog)
