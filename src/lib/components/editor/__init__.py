@@ -1,7 +1,7 @@
 import tkinter as tk
 
 from .content import EditorContent
-from .utils.path import Path
+from .utils.path import EditorPath
 
 
 class Editor(tk.Frame):
@@ -14,7 +14,7 @@ class Editor(tk.Frame):
         self.exists = exists
 
         # Initialize the top path bar and the bottom content area
-        self.pathbar = Path(master=self, text=path)
+        self.pathbar = EditorPath(master=self, path=path)
         self.content = EditorContent(self, path=path, exists=exists)
 
         # Layout: Path on top (row 0), Content on bottom (row 1, expanding)

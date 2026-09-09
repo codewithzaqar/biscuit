@@ -1,12 +1,22 @@
+import os
 import tkinter as tk
 
 
-class Path(tk.Label):
-    def __init__(self, master, *args, **kwargs):
+class EditorPath(tk.Frame):
+    def __init__(self, master, path=None, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
         self.master = master
 
-        self.pathvar = tk.StringVar()
-        self.pathvar.set(self.master.path)
+        # Split the absolute path into its individual directories
+        self.path = path.split(os.sep)
+        self.path_btns = []
 
-        self.config(anchor=tk.W, textvariable=self.pathvar, bg="#6c6c6c", fg="#ffffff")
+        # Create a clickable button for every folder in the path
+        for i in self.path:
+            # Using a Menubutton so we can eventually attach dropdown menus to folders
+            btn = tk.Menubutton(self, text=f"{i} >", font=("Helvetica", 12))
+            btn.config(padx=1, fg="#000000", activebackground="#4c4a48", activeforeground="#ffffff")
+            btn.pack(side=tk.LEFT)
+            self.path_btns.append(btn)
+
+        # self.config(bg="#6c6c6c", fg="#ffffff")
