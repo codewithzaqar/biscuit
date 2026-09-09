@@ -164,5 +164,5 @@ class EditorTabs(ttk.Notebook):
 
     def get_active_text(self):
         if self.base.active_file:
-            return self.opened_editors[self.base.active_file][2].text.get_all_text()
+            return self.opened_editors[self.base.active_file][2].content.text.get_all_text()
         return ""
