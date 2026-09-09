@@ -15,6 +15,7 @@ class Text(tk.Text):
         if exists:
             self.load_file(self.path)
             
+        self.focus_set()
         self.create_proxy()
 
     def create_proxy(self):
