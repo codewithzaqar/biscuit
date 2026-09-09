@@ -14,7 +14,7 @@ class EditorPath(tk.Frame):
         # Create a clickable button for every folder in the path
         for i in self.path:
             # Using a Menubutton so we can eventually attach dropdown menus to folders
-            btn = tk.Menubutton(self, text=f"{i} >", font=("Helvetica", 12))
+            btn = tk.Menubutton(self, text=f"{i} >", font=("Verdana", 14))
             btn.config(padx=1, fg="#000000", activebackground="#4c4a48", activeforeground="#ffffff")
             btn.pack(side=tk.LEFT)
             self.path_btns.append(btn)
